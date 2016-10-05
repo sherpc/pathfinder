@@ -15,6 +15,8 @@
   (println x "Hello, World!")
   (let [x 3 z 2]
     (trace-env)
+    (let [{:keys [asd]} {:asd "test"}]
+      (trace-env))
     :return))
 
 (defn rock-n-roll!
@@ -26,3 +28,10 @@
   []
   (println "some bar, calling foo")
   (rock-n-roll! {:y 1}))
+
+(defn another
+  []
+  (println "another root")
+  (foo (range 5)))
+
+(defrecord Person [fname lname])
