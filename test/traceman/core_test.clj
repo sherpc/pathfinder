@@ -24,8 +24,11 @@
       (t/trace-env)
       (let [z 3]
         (t/trace-env)
-        (is (= 2 (count @db)))
-        (is (= 1 (tu/tracks-count @db)))))))
+        (let [a 4]
+          (t/trace-env)
+          (is (= 3 (count @db)))
+          (is (= 1 (tu/tracks-count @db)))
+          (is (= 3 (->> @db (map :seq-id) (apply max)))))))))
 
 (defn some-inner-fn
   [a b c]
