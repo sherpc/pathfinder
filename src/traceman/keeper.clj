@@ -1,5 +1,6 @@
 (ns traceman.keeper
-  (:require [mount.core :refer [defstate]]))
+  (:require [mount.core :refer [defstate]]
+            [traceman.storage :refer [tracks-saver] :as storage]))
 
 (defn uuid [] (str (java.util.UUID/randomUUID)))
 
@@ -54,11 +55,12 @@
   (when (instance? clojure.lang.Atom tracks)
     (let [track-id (track-id env @tracks callstack)
           t-id (or track-id (uuid))
-          context {:caller caller
+          track {:caller caller
                    :project-name (project-name caller)
                    :env env
                    :track-id t-id}]
       (if track-id
         (swap! tracks push-track t-id (keyword caller))
         (reset! tracks (new-track t-id (keyword caller))))
-      (clojure.pprint/pprint context))))
+      (storage/save! tracks-saver track)
+      t-id)))
