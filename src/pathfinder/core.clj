@@ -3,8 +3,8 @@
             [pathfinder.keeper :as k]))
 
 (defn trace-env*
-  [env path-id]
-  (k/store! env (st/callers) path-id))
+  [env path]
+  (k/store! env (st/callers) path))
 
 (defn prepare-env
   [env]
@@ -16,4 +16,9 @@
   []
   (let [env (prepare-env &env)]
     `(trace-env* ~env nil)))
+
+(defmacro trace-path
+  [path]
+  (let [env (prepare-env &env)]
+    `(trace-env* ~env ~path)))
 
