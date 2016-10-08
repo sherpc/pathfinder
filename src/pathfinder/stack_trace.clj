@@ -1,4 +1,4 @@
-(ns traceman.stack-trace
+(ns pathfinder.stack-trace
   (:require [clojure.string :as s]))
 
 (def ^:private ignored-call-stack-ns
@@ -34,4 +34,4 @@
    distinct
    (remove java?)
    (map ->clj-format)
-   (remove #(= "traceman.core/trace-env*" %))))
+   (remove #(= "pathfinder.core/trace-env*" %))))

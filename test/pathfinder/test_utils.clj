@@ -1,8 +1,8 @@
-(ns traceman.test-utils
+(ns pathfinder.test-utils
   (:require [clojure.test :as t]
             [mount.core :refer [defstate] :as mount]
-            [traceman.keeper :refer [tracks]]
-            [traceman.storage :refer [TracksSaver]]))
+            [pathfinder.keeper :refer [tracks]]
+            [pathfinder.storage :refer [TracksSaver]]))
 
 (defonce db (atom []))
 

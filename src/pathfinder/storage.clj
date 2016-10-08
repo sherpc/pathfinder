@@ -1,4 +1,4 @@
-(ns traceman.storage
+(ns pathfinder.storage
   (:require [mount.core :refer [defstate]]))
 
 (defprotocol TracksSaver

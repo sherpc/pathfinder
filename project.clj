@@ -1,11 +1,10 @@
-(defproject traceman "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
+(defproject pathfinder "0.1.0-SNAPSHOT"
+  :description "Easy tracking of function calls and context variables."
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [clj-time "0.12.0"]
                  [mount "0.1.10"]
-                 [org.clojure/java.jdbc "0.6.1"]
-                 [org.postgresql/postgresql "9.4.1211"]
+                 [com.taoensso/carmine "2.14.0"]
                  ])

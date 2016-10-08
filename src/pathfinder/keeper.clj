@@ -1,6 +1,6 @@
-(ns traceman.keeper
+(ns pathfinder.keeper
   (:require [mount.core :refer [defstate]]
-            [traceman.storage :refer [tracks-saver] :as storage]))
+            [pathfinder.storage :refer [tracks-saver] :as storage]))
 
 (defn uuid [] (str (java.util.UUID/randomUUID)))
 

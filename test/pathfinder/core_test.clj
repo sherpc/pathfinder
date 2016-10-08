@@ -1,15 +1,15 @@
-(ns traceman.core-test
+(ns pathfinder.core-test
   (:require [clojure.test :refer :all]
             [mount.core :as mount]
-            [traceman.core :as t]
-            [traceman.keeper :refer [tracks]]
-            [traceman.test-utils :refer [db] :as tu]))
+            [pathfinder.core :as t]
+            [pathfinder.keeper :refer [tracks]]
+            [pathfinder.test-utils :refer [db] :as tu]))
 
 (use-fixtures
   :each
   (fn [f]
     (mount/start-with-states
-     {#'traceman.storage/tracks-saver #'traceman.test-utils/atom-saver})
+     {#'pathfinder.storage/tracks-saver #'pathfinder.test-utils/atom-saver})
     (f)
     (mount/stop)))
 

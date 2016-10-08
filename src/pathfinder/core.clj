@@ -1,6 +1,6 @@
-(ns traceman.core
-  (:require [traceman.stack-trace :as st]
-            [traceman.keeper :as k]))
+(ns pathfinder.core
+  (:require [pathfinder.stack-trace :as st]
+            [pathfinder.keeper :as k]))
 
 (defn trace-env*
   [env]
