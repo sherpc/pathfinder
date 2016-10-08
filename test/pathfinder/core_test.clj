@@ -32,6 +32,7 @@
         (t/trace-env)
         (let [a 4]
           (t/trace-env)
+          ;;(clojure.pprint/pprint @db)
           (is (= 3 (count @db)))
           (is (= 1 (tu/tracks-count @db)))
           (is (= 3 (->> @db (map :seq-id) (apply max)))))))))

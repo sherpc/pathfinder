@@ -5,11 +5,11 @@
   #{"callers" "dbg" "clojure.lang" "swank" "nrepl" "eval"})
 
 (defn ignored?
-  [classname]
+  [{:keys [classname]}]
   (some #(re-find (re-pattern %) classname) ignored-call-stack-ns))
 
 (defn java?
-  [classname]
+  [{:keys [classname]}]
   (.startsWith classname "java."))
 
 (defn ->clj-format
@@ -21,6 +21,12 @@
    (s/replace #"_BANG_" "!")
    (s/replace #"_" "-")))
 
+(defn stack-trace-element
+  [ste]
+  {:classname (.getClassName ste)
+   :file (.getFileName ste)
+   :line (.getLineNumber ste)})
+
 (defn callers
   "Return keywords seq of callstack functions."
   []
@@ -28,12 +34,12 @@
    (Throwable.)
    .fillInStackTrace
    .getStackTrace
-   (map #(-> % .getClassName str))
+   (map stack-trace-element)
    (remove ignored?)
    doall
    vec
    distinct
    (remove java?)
-   (map ->clj-format)
-   (remove #(= "pathfinder.core/trace-env*" %))
-   (map keyword)))
+   (map #(update % :classname ->clj-format))
+   (remove #(= "pathfinder.core/trace-env*" (:classname %)))
+   (map #(update % :classname keyword))))

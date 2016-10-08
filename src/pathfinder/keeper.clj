@@ -20,7 +20,10 @@
   [env {:keys [path id seq-id] :as thread-path} callstack]
   (when (and
          thread-path
-         (-> callstack reverse (is-sub-seq? path)))
+         (-> callstack
+             (#(map :classname %))
+             reverse
+             (is-sub-seq? path)))
     [id seq-id]))
 
 (defn conj-if-distinct
@@ -57,15 +60,18 @@
   [env [caller :as callstack] exists-path]
   (when (instance? clojure.lang.Atom paths)
     (let [thread-id (.getId (Thread/currentThread))
+          caller-name (:classname caller)
           thread-path (or exists-path (get @paths thread-id))
           [path-id seq-id] (if exists-path
                              ((juxt :id :seq-id) exists-path)
                              (path-id env thread-path callstack))
           path (if path-id
-                 (conj-path thread-path caller)
-                 (new-path caller))
-          track {:caller caller
-                 :project-name (project-name caller)
+                 (conj-path thread-path caller-name)
+                 (new-path caller-name))
+          track {:caller caller-name
+                 :file (:file caller)
+                 :line (:line caller)
+                 :project-name (project-name caller-name)
                  :env env
                  :host-address (host-address)
                  :path-id (:id path)
