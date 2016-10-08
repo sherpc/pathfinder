@@ -19,7 +19,11 @@
   (testing "simple let"
     (let [x 1]
       (t/trace-env)
-      (is (= 1 (count @db)))))
+      (is (= 1 (count @db)))
+      (let [{:keys [project-name env seq-id]} (first @db)]
+        (is (= "pathfinder" project-name))
+        (is (= {"x" 1} env))
+        (is (= 1 seq-id)))))
   (testing "let with inner let"
     (reset! db [])
     (let [y 2]

@@ -43,11 +43,13 @@
   [caller]
   (some->
    caller
-   name
-   (clojure.string/split #"/")
-   first
+   namespace
    (clojure.string/split #"\.")
    first))
+
+(defn host-address
+  []
+  (.getHostAddress (java.net.InetAddress/getLocalHost)))
 
 (defn store!
   "Should not be called in parallel in same thread. Returns path id."
@@ -62,6 +64,7 @@
           track {:caller caller
                  :project-name (project-name caller)
                  :env env
+                 :host-address (host-address)
                  :path-id (:id path)
                  :seq-id (:seq-id path)}]
       (swap! paths assoc thread-id path)
