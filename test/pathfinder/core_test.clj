@@ -77,16 +77,24 @@
   (testing "N go channels should produce N different paths"
     (assert-threads-tracks 20 generate-go-channels)))
 
+(defn future-inner-fn
+  [path x]
+  (let [z {:x x :inc (inc x)}]
+    (t/trace-path path)))
+
 (defn future-test-fn
   [a b]
   (let [p (t/trace-env)]
     @(future
        (let [x (+ a b)]
          (t/trace-path p)
-         x))))
+         (future-inner-fn p x)))))
 
 (deftest same-path-accross-different-threads
   (testing "use path from main thread in future"
     (future-test-fn 1 2)
-    (clojure.pprint/pprint @db)
-    (is (= 2 (count @db)))))
+    (is (= 3 (count @db)))
+    (is (= 1 (->> @db
+                  (map :path-id)
+                  distinct
+                  count)))))

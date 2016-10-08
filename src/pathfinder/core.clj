@@ -19,6 +19,7 @@
 
 (defmacro trace-path
   [path]
-  (let [env (prepare-env &env)]
+  (let [env (-> &env
+                prepare-env
+                (dissoc (str path)))]
     `(trace-env* ~env ~path)))
-

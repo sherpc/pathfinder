@@ -58,7 +58,9 @@
   (when (instance? clojure.lang.Atom paths)
     (let [thread-id (.getId (Thread/currentThread))
           thread-path (or exists-path (get @paths thread-id))
-          [path-id seq-id] (path-id env thread-path callstack)
+          [path-id seq-id] (if exists-path
+                             ((juxt :id :seq-id) exists-path)
+                             (path-id env thread-path callstack))
           path (if path-id
                  (conj-path thread-path caller)
                  (new-path caller))
