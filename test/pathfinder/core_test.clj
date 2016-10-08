@@ -3,7 +3,9 @@
             [mount.core :as mount]
             [pathfinder.core :as t]
             [pathfinder.keeper :refer [paths]]
-            [pathfinder.test-utils :refer [db] :as tu]))
+            [pathfinder.test-utils :refer [db] :as tu]
+
+            [clojure.core.async :as a]))
 
 (use-fixtures
   :each
@@ -62,6 +64,15 @@
     (while (not (every? realized? fs))
       (Thread/sleep 100))))
 
+(defn generate-go-channels
+  [n]
+  (->>
+   (range n)
+   (mapv (fn [_] (a/go (test-fn 1 2))))
+   (mapv #(a/<!! %))))
+
 (deftest future-threads-test
   (testing "N futures should produce N different paths"
-    (assert-threads-tracks 20 generate-futures)))
+    (assert-threads-tracks 20 generate-futures))
+  (testing "N go channels should produce N different paths"
+    (assert-threads-tracks 2 generate-go-channels)))

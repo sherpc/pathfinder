@@ -9,4 +9,7 @@
 
                  ;; redis storage
                  [com.taoensso/carmine "2.14.0"]
+
+                 ;; only for testing purposes
+                 [org.clojure/core.async "0.2.391"]
                  ])
