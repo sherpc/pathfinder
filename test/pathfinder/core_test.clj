@@ -41,20 +41,19 @@
   (some-inner-fn a b 3))
 
 (deftest future-threads-test
-  (testing "two futures should produce different paths"
-    (println @paths)
-    (let [f1 (future (test-fn 1 2))
-          f2 (future (test-fn 1 2))]
-      (while (not
-              (and
-               (realized? f1)
-               (realized? f2)))
+  (testing "N futures should produce N different paths"
+    (let [n 10
+          futures (map
+                   (fn [_] (future (test-fn 1 2)))
+                   (range n))]
+      (while (not (every? realized? futures))
         (Thread/sleep 100))
-      (is (= 6 @f1 @f2))
-      (clojure.pprint/pprint @db)
-      (is (->>
-           @db
-           (group-by :path-id)
-           vals
-           (map count)
-           (every? #(= % 2)))))))
+      (let [tracks-by-path (group-by :path-id @db)]
+        ;; in every path there is 2 tracks (for two fns)
+        (is (->>
+             tracks-by-path
+             vals
+             (map count)
+             (every? #(= % 2))))
+        ;; there is N track groups (aka paths)
+        (is (= n (count tracks-by-path)))))))
