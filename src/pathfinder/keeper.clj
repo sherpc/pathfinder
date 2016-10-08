@@ -52,11 +52,12 @@
   (.getHostAddress (java.net.InetAddress/getLocalHost)))
 
 (defn store!
-  "Should not be called in parallel in same thread. Returns path id."
-  [env [caller :as callstack]]
+  "Should not be called in parallel in same thread. Returns path.
+  You can use alredy existing path, for example, to use same path in different threads."
+  [env [caller :as callstack] exists-path]
   (when (instance? clojure.lang.Atom paths)
     (let [thread-id (.getId (Thread/currentThread))
-          thread-path (get @paths thread-id)
+          thread-path (or exists-path (get @paths thread-id))
           [path-id seq-id] (path-id env thread-path callstack)
           path (if path-id
                  (conj-path thread-path caller)
@@ -69,4 +70,4 @@
                  :seq-id (:seq-id path)}]
       (swap! paths assoc thread-id path)
       (storage/save! tracks-saver track)
-      (:id path))))
+      path)))
