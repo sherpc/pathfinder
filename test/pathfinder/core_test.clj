@@ -56,23 +56,19 @@
     ;; there is N track groups (aka paths)
     (is (= n (count tracks-by-path)))))
 
-(defn generate-futures
-  [n]
-  (let [fs (mapv
-            (fn [_] (future (test-fn 1 2)))
-            (range n))]
-    (while (not (every? realized? fs))
-      (Thread/sleep 100))))
+(defmacro gen-threads
+  [new-thread wait-thread]
+  `(fn [n#]
+     (->>
+      (range n#)
+      (mapv (fn [_#] (~new-thread (test-fn 1 2))))
+      (mapv ~wait-thread))))
 
-(defn generate-go-channels
-  [n]
-  (->>
-   (range n)
-   (mapv (fn [_] (a/go (test-fn 1 2))))
-   (mapv #(a/<!! %))))
+(def generate-futures (gen-threads future deref))
+(def generate-go-channels (gen-threads a/go #(a/<!! %)))
 
 (deftest future-threads-test
   (testing "N futures should produce N different paths"
     (assert-threads-tracks 20 generate-futures))
   (testing "N go channels should produce N different paths"
-    (assert-threads-tracks 2 generate-go-channels)))
+    (assert-threads-tracks 20 generate-go-channels)))
