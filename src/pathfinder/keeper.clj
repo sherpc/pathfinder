@@ -52,10 +52,10 @@
 (defn store!
   "Should not be called in parallel in same thread. Returns path id."
   [env [caller :as callstack]]
-  (when (instance? clojure.lang.Atom tracks)
+  (when (instance? clojure.lang.Atom paths)
     (let [thread-id (.getId (Thread/currentThread))
           thread-path (get @paths thread-id)
-          [path-id seq-id] (path-id env thread-track callstack)
+          [path-id seq-id] (path-id env thread-path callstack)
           path (if path-id
                  (conj-path thread-path caller)
                  (new-path caller))
@@ -64,6 +64,6 @@
                  :env env
                  :path-id (:id path)
                  :seq-id (:seq-id path)}]
-      (swap! tracks assoc thread-id path)
+      (swap! paths assoc thread-id path)
       (storage/save! tracks-saver track)
       (:id path))))

@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [mount.core :as mount]
             [pathfinder.core :as t]
-            [pathfinder.keeper :refer [tracks]]
+            [pathfinder.keeper :refer [paths]]
             [pathfinder.test-utils :refer [db] :as tu]))
 
 (use-fixtures
@@ -41,8 +41,8 @@
   (some-inner-fn a b 3))
 
 (deftest future-threads-test
-  (testing "two futures should produce different tracks"
-    (println @tracks)
+  (testing "two futures should produce different paths"
+    (println @paths)
     (let [f1 (future (test-fn 1 2))
           f2 (future (test-fn 1 2))]
       (while (not
@@ -54,7 +54,7 @@
       (clojure.pprint/pprint @db)
       (is (->>
            @db
-           (group-by :track-id)
+           (group-by :path-id)
            vals
            (map count)
            (every? #(= % 2)))))))

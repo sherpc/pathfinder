@@ -1,7 +1,6 @@
 (ns pathfinder.test-utils
   (:require [clojure.test :as t]
             [mount.core :refer [defstate] :as mount]
-            [pathfinder.keeper :refer [tracks]]
             [pathfinder.storage :refer [TracksSaver]]))
 
 (defonce db (atom []))
@@ -21,6 +20,6 @@
   [tracks]
   (->>
    tracks
-   (map :track-id)
+   (map :path-id)
    distinct
    count))
