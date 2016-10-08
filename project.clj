@@ -6,5 +6,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [clj-time "0.12.0"]
                  [mount "0.1.10"]
+
+                 ;; redis storage
                  [com.taoensso/carmine "2.14.0"]
                  ])

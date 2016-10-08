@@ -22,6 +22,7 @@
    (s/replace #"_" "-")))
 
 (defn callers
+  "Return keywords seq of callstack functions."
   []
   (->>
    (Throwable.)
@@ -34,4 +35,5 @@
    distinct
    (remove java?)
    (map ->clj-format)
-   (remove #(= "pathfinder.core/trace-env*" %))))
+   (remove #(= "pathfinder.core/trace-env*" %))
+   (map keyword)))
