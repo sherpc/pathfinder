@@ -4,7 +4,8 @@
             [pathfinder.storage :refer [TracksSaver]]
             [pathfinder.query :refer [TracksQueryHandler]]))
 
-(defonce db (atom []))
+(def default-state '())
+(defonce db (atom default-state))
 
 (defrecord AtomSaver []
   TracksSaver
@@ -13,9 +14,9 @@
 
 (defstate atom-saver
   :start (do
-           (reset! db [])
+           (reset! db default-state)
            (->AtomSaver))
-  :stop (reset! db []))
+  :stop (reset! db default-state))
 
 (defn tracks-count
   [tracks]
@@ -28,7 +29,14 @@
 (defrecord AtomQueryHandler []
   TracksQueryHandler
   (search [_ params]
-    @db))
+    [])
+  (last-n [_ n]
+    (->>
+     @db
+     (group-by :path-id)
+     (map (fn [[path tracks]] [path (sort-by :seq-id tracks)]))
+     (take n)
+     (into {}))))
 
 (defstate atom-query-handler
   :start (->AtomQueryHandler))

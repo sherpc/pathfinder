@@ -11,7 +11,8 @@
             [pathfinder.query :refer [tracks-query-handler] :as q]))
 
 (defroutes app-routes
-  (GET "/" [] (response (q/search tracks-query-handler {})))
+  (GET "/" []
+    (response (q/last-n tracks-query-handler 10)))
   (route/not-found {:error "not found"}))
 
 (def app
