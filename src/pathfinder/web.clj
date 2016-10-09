@@ -17,6 +17,7 @@
      (q/last-n tracks-query-handler safe-n))))
 
 (defroutes app-routes
+  (GET "/stats" [] (response (q/stats tracks-query-handler)))
   (GET "/:n" [n] (last-n n))
   (GET "/" [] (last-n nil))
   (route/not-found {:error "not found"}))

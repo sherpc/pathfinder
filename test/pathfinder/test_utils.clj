@@ -36,7 +36,9 @@
      (group-by :path-id)
      (map (fn [[path tracks]] [path (sort-by :seq-id tracks)]))
      (take n)
-     (into {}))))
+     (into {})))
+  (stats [_]
+    {:count (count @db)}))
 
 (defstate atom-query-handler
   :start (->AtomQueryHandler))
