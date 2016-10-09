@@ -10,9 +10,15 @@
 
             [pathfinder.query :refer [tracks-query-handler] :as q]))
 
+(defn last-n
+  [n]
+  (response
+   (let [safe-n (or (and n (Integer/parseInt n)) 10)]
+     (q/last-n tracks-query-handler safe-n))))
+
 (defroutes app-routes
-  (GET "/" []
-    (response (q/last-n tracks-query-handler 10)))
+  (GET "/:n" [n] (last-n n))
+  (GET "/" [] (last-n nil))
   (route/not-found {:error "not found"}))
 
 (def app
