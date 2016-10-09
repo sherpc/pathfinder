@@ -6,10 +6,12 @@
             [compojure.handler :as handler]
             [ring.util.response :refer [response]]
             [ring.middleware.json :as json-m]
-            [ring.adapter.jetty :as j]))
+            [ring.adapter.jetty :as j]
+
+            [pathfinder.query :refer [tracks-query-handler] :as q]))
 
 (defroutes app-routes
-  (GET "/" [] (response {:state "world!"}))
+  (GET "/" [] (response (q/search tracks-query-handler {})))
   (route/not-found {:error "not found"}))
 
 (def app
