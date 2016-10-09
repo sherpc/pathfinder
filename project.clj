@@ -12,4 +12,13 @@
 
                  ;; only for testing purposes
                  [org.clojure/core.async "0.2.391"]
+
+                 ;; web api
+                 [ring/ring-core "1.5.0"]
+                 [ring/ring-jetty-adapter "1.5.0"]
+                 [ring/ring-json "0.4.0"]
+                 [compojure "1.5.1"]
+
+                 ;; logging
+                 [org.clojure/tools.logging "0.3.1"]
                  ])
