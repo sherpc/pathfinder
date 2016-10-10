@@ -18,7 +18,7 @@
            (->AtomSaver))
   :stop (reset! db default-state))
 
-(defn tracks-count
+(defn paths-count
   [tracks]
   (->>
    tracks
@@ -38,7 +38,8 @@
      (take n)
      (into {})))
   (stats [_]
-    {:count (count @db)}))
+    {:tracks (count @db)
+     :paths (paths-count @db)}))
 
 (defstate atom-query-handler
   :start (->AtomQueryHandler))

@@ -34,7 +34,7 @@
           (t/trace-env)
           ;;(clojure.pprint/pprint @db)
           (is (= 3 (count @db)))
-          (is (= 1 (tu/tracks-count @db)))
+          (is (= 1 (tu/paths-count @db)))
           (is (= 3 (->> @db (map :seq-id) (apply max)))))))))
 
 (defn assert-threads-tracks
@@ -72,10 +72,10 @@
   (testing "use path from main thread in future"
     (future-test-fn 1 2)
     (is (= 3 (count @db)))
-    (is (= 1 (tu/tracks-count @db)))))
+    (is (= 1 (tu/paths-count @db)))))
 
 (deftest recursion
   (testing "recursion should keep same path"
     (gcd 1023 858)
     (is (= 4 (count @db)))
-    (is (= 1 (tu/tracks-count @db)))))
+    (is (= 1 (tu/paths-count @db)))))
