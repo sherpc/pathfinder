@@ -4,7 +4,7 @@
             [compojure.core :refer :all]
             [compojure.route :as route]
             [compojure.handler :as handler]
-            [ring.util.response :refer [response]]
+            [ring.util.response :refer [response header]]
             [ring.middleware.json :as json-m]
             [ring.adapter.jetty :as j]
 
@@ -22,11 +22,20 @@
   (GET "/" [] (last-n nil))
   (route/not-found {:error "not found"}))
 
+(defn wrap-cors
+  [handler]
+  (fn [req]
+    (->
+     req
+     handler
+     (header "Access-Control-Allow-Origin" "*"))))
+
 (def app
   (->
    (handler/site app-routes)
    json-m/wrap-json-response
-   json-m/wrap-json-params))
+   json-m/wrap-json-params
+   wrap-cors))
 
 (defn main-handler
   [req]
