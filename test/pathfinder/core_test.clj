@@ -4,7 +4,7 @@
             [pathfinder.core :as t]
             [pathfinder.keeper :refer [paths]]
             [pathfinder.test-utils :refer [db] :as tu]
-
+            [pathfinder.test-fns :refer :all]
             [clojure.core.async :as a]))
 
 (use-fixtures
@@ -37,16 +37,6 @@
           (is (= 1 (tu/tracks-count @db)))
           (is (= 3 (->> @db (map :seq-id) (apply max)))))))))
 
-(defn some-inner-fn
-  [a b c]
-  (t/trace-env)
-  (+ a b c))
-
-(defn test-fn
-  [a b]
-  (t/trace-env)
-  (some-inner-fn a b 3))
-
 (defn assert-threads-tracks
   [n generate-threads-fn]
   (reset! db [])
@@ -78,24 +68,14 @@
   (testing "N go channels should produce N different paths"
     (assert-threads-tracks 20 generate-go-channels)))
 
-(defn future-inner-fn
-  [path x]
-  (let [z {:x x :inc (inc x)}]
-    (t/trace-path path)))
-
-(defn future-test-fn
-  [a b]
-  (let [p (t/trace-env)]
-    @(future
-       (let [x (+ a b)]
-         (t/trace-path p)
-         (future-inner-fn p x)))))
-
 (deftest same-path-accross-different-threads
   (testing "use path from main thread in future"
     (future-test-fn 1 2)
     (is (= 3 (count @db)))
-    (is (= 1 (->> @db
-                  (map :path-id)
-                  distinct
-                  count)))))
+    (is (= 1 (tu/tracks-count @db)))))
+
+(deftest recursion
+  (testing "recursion should keep same path"
+    (gcd 1023 858)
+    (is (= 4 (count @db)))
+    (is (= 1 (tu/tracks-count @db)))))
