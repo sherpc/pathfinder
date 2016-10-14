@@ -1,6 +1,7 @@
 (ns pathfinder.redis.storage-test
   (:require [pathfinder.redis.storage :as rs]
             [mount.core :as mount]
+            [taoensso.carmine :as car]
             [clojure.test :refer :all]))
 
 (use-fixtures
@@ -10,8 +11,13 @@
      {#'pathfinder.config/config #'pathfinder.test-utils/dev-config
       #'pathfinder.storage/tracks-saver #'pathfinder.redis.storage/tracks-saver})
     (f)
-    (mount/stop)))
+    (mount/stop))
+  (fn [f]
+    (car/wcar
+     rs/tracks-saver
+     (car/flushall))
+    (f)))
 
 (deftest ping-test
   (testing "simple redis ping"
-    (is (= "PONG" (rs/ping)))))
+    (is (= ["PONG" "OK" "bar"] (rs/ping)))))

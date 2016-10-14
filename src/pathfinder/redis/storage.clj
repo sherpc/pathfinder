@@ -4,12 +4,16 @@
             [taoensso.carmine :as car :refer (wcar)]
             [mount.core :refer [defstate]]))
 
-(defmacro wcar* [& body]
+(defmacro wcar*
+  [& body]
   `(car/wcar tracks-saver ~@body))
 
 (defn ping
   []
-  (wcar* (car/ping)))
+  (wcar*
+   (car/ping)
+   (car/set "navi" "bar")
+   (car/get "navi")))
 
 (defrecord RedisSaver [config]
   TracksSaver
