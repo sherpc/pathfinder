@@ -1,6 +1,8 @@
 (ns pathfinder.keeper
   (:require [mount.core :refer [defstate]]
-            [pathfinder.storage :refer [tracks-saver] :as storage]))
+            [pathfinder.storage :as storage]
+            [pathfinder.redis.storage :refer [tracks-saver]]
+            [pathfinder.config :refer [config]]))
 
 (defn uuid [] (str (java.util.UUID/randomUUID)))
 
@@ -57,7 +59,7 @@
 (defn store!
   "Should not be called in parallel in same thread. Returns path.
   You can use alredy existing path, for example, to use same path in different threads."
-  [env [caller :as callstack] exists-path]
+  [env [caller :as callstack] ttl exists-path]
   (when (instance? clojure.lang.Atom paths)
     (let [thread-id (.getId (Thread/currentThread))
           caller-name (:classname caller)
@@ -78,5 +80,5 @@
                  :seq-id (:seq-id path)
                  :captured-at (System/currentTimeMillis)}]
       (swap! paths assoc thread-id path)
-      (storage/save! tracks-saver track)
+      (storage/save! tracks-saver track (or ttl (:ttl config)))
       path)))

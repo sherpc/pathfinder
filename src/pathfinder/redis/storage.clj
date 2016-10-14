@@ -4,6 +4,8 @@
             [taoensso.carmine :as car :refer (wcar)]
             [mount.core :refer [defstate]]))
 
+(declare tracks-saver)
+
 (defmacro wcar*
   [& body]
   `(car/wcar tracks-saver ~@body))
@@ -17,10 +19,10 @@
 
 (defrecord RedisSaver [config]
   TracksSaver
-  (save! [_ {:keys [path-id] :as track}]
+  (save! [_ {:keys [path-id] :as track} ttl]
     (wcar*
      (car/lpush path-id track))
-    (println "Pushed to redis.")
+    (println "Pushed to redis with ttl" ttl)
     (clojure.pprint/pprint track)))
 
 (defstate tracks-saver

@@ -11,7 +11,7 @@
 
 (defrecord AtomSaver []
   TracksSaver
-  (save! [_ track]
+  (save! [_ track ttl]
     (swap! db conj track)))
 
 (defstate atom-saver
