@@ -17,11 +17,19 @@
    (car/set "navi" {:a 1})
    (car/get "navi")))
 
+(defn total-seconds
+  [ttl]
+  (->
+   ttl
+   java.time.Duration/parse
+   .getSeconds))
+
 (defrecord RedisSaver [config]
   TracksSaver
   (save! [_ {:keys [path-id] :as track} ttl]
     (wcar*
-     (car/lpush path-id track))
+     (car/lpush path-id track)
+     (car/expire path-id (total-seconds ttl)))
     (println "Pushed to redis with ttl" ttl)
     (clojure.pprint/pprint track)))
 
