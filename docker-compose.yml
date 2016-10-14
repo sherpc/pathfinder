@@ -1,0 +1,11 @@
+version: '2'
+services:
+  redis:
+    image: redis:3.0
+    ports:
+      - "6379:6379"
+  redis-cli:
+    image: redis:3.0
+    command: redis-cli -h redis -p 6379
+    depends_on:
+      - redis

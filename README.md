@@ -1,6 +1,6 @@
-# traceman
+# Pathfinder
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure library designed to track fns execution context and search through it.
 
 ## Usage
 
@@ -8,7 +8,6 @@ FIXME
 
 ## License
 
-Copyright © 2016 FIXME
+Copyright © 2016 Aleksandr Sher
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Eclipse Public License version 1.0.

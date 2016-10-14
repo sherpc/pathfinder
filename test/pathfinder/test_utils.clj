@@ -4,6 +4,8 @@
             [pathfinder.storage :refer [TracksSaver]]
             [pathfinder.query :refer [TracksQueryHandler]]))
 
+;; TracksSaver
+
 (def default-state '())
 (defonce db (atom default-state))
 
@@ -26,6 +28,8 @@
    distinct
    count))
 
+;; TracksQueryHandler
+
 (defrecord AtomQueryHandler []
   TracksQueryHandler
   (search [_ params]
@@ -43,3 +47,8 @@
 
 (defstate atom-query-handler
   :start (->AtomQueryHandler))
+
+;; Config
+
+(defstate dev-config
+  :start (load-file "config/dev.clj"))
