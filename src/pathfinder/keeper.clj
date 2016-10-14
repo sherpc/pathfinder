@@ -75,7 +75,8 @@
                  :env env
                  :host-address (host-address)
                  :path-id (:id path)
-                 :seq-id (:seq-id path)}]
+                 :seq-id (:seq-id path)
+                 :captured-at (System/currentTimeMillis)}]
       (swap! paths assoc thread-id path)
       (storage/save! tracks-saver track)
       path)))
