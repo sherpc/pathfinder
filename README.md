@@ -1,5 +1,7 @@
 # Pathfinder
 
+https://codeship.com/projects/179280/status?branch=master
+
 A Clojure library designed to track fns execution context and search through it.
 
 ## TODO
