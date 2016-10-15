@@ -7,17 +7,17 @@
             [ring.util.response :refer [response header]]
             [ring.middleware.json :as json-m]
             [ring.adapter.jetty :as j]
-            [pathfinder.redis.query :refer [tracks-query-handler]]
+            [pathfinder.redis.query :refer [read-model]]
             [pathfinder.query :as q]))
 
 (defn last-n
   [n]
   (response
    (let [safe-n (or (and n (Integer/parseInt n)) 10)]
-     (q/last-n tracks-query-handler safe-n))))
+     (q/last-n read-model safe-n))))
 
 (defroutes app-routes
-  (GET "/stats" [] (response (q/stats tracks-query-handler)))
+  (GET "/stats" [] (response (q/stats read-model)))
   (GET "/:n" [n] (last-n n))
   (GET "/" [] (last-n nil))
   (route/not-found {:error "not found"}))

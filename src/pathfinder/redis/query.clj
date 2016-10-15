@@ -1,5 +1,5 @@
 (ns pathfinder.redis.query
-  (:require [pathfinder.query :refer [TracksQueryHandler]]
+  (:require [pathfinder.query :refer [TracksReadModel]]
             [pathfinder.redis.connection :refer [wcar*]]
             [pathfinder.redis.utils :as ru]
             [clojure.string :as str]
@@ -7,8 +7,8 @@
             [mount.core :refer [defstate]]
             [clojure.tools.logging :as log]))
 
-(defrecord RedisQueryHandler []
-  TracksQueryHandler
+(defrecord RedisReadModel []
+  TracksReadModel
   (search [_ query]
     (let [params (str/split query #" ")
           results (wcar* :as-pipeline (mapv car/smembers params))]
@@ -22,5 +22,5 @@
   (stats [_]
     {}))
 
-(defstate tracks-query-handler
-  :start (->RedisQueryHandler))
+(defstate read-model
+  :start (->RedisReadModel))
