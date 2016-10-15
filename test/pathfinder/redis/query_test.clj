@@ -29,7 +29,8 @@
       (doseq [i (range n)]
         (tf/test-fn i (inc i)))
       (let [last-n (q/last-n rq/read-model 1000)]
-        (is (= buffer-size (count last-n)))))))
+        (is (= buffer-size (count last-n)))
+        (is (map? last-n))))))
 
 (defn x-y-fn
   [x y]

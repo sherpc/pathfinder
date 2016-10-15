@@ -14,7 +14,13 @@ A Clojure library designed to track fns execution context and search through it.
 
 ## Usage
 
-FIXME
+Run redis cli to monitor key expirations:
+
+```
+docker-compose run redis redis-cli -h redis --csv psubscribe '__key*__:expired'
+```
+
+Stop via `docker kill {container-id}` in separated console.
 
 ## License
 

@@ -18,7 +18,11 @@
        ru/intersect)))
   (last-n [_ n]
     (log/debugf "last '%s' tracks" n)
-    (wcar* (car/lrange ru/last-n 0 n)))
+    (->>
+     (wcar* (car/lrange ru/last-n 0 n))
+     (mapv (fn [id]
+             [id (wcar* (car/lrange id 0 -1))]))
+     (into {})))
   (stats [_]
     {}))
 

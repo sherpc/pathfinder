@@ -10,6 +10,9 @@
             [pathfinder.redis.query :refer [read-model]]
             [pathfinder.query :as q]))
 
+(defn group-tracks
+  [])
+
 (defn last-n
   [n]
   (response

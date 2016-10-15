@@ -11,8 +11,7 @@
   (->
    (mount/swap-states
     {#'pathfinder.redis.storage/tracks-saver #'pathfinder.test-utils/atom-saver
-     #'pathfinder.query/read-model #'pathfinder.test-utils/atom-query-handler})
+     #'pathfinder.redis.query/read-model #'pathfinder.test-utils/atom-query-handler})
    (mount/swap {#'pathfinder.redis.expired-listener/expired-listener nil})
    mount/start)
   (tf/run-all))
-
