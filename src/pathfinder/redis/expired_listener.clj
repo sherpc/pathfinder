@@ -32,4 +32,5 @@
 
 (defstate expired-listener
   :start (create-listener)
-  :stop (car/close-listener expired-listener))
+  :stop (when expired-listener
+          (car/close-listener expired-listener)))

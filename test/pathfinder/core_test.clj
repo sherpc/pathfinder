@@ -10,8 +10,11 @@
 (use-fixtures
   :each
   (fn [f]
-    (mount/start-with-states
-     {#'pathfinder.redis.storage/tracks-saver #'pathfinder.test-utils/atom-saver})
+    (->
+     (mount/swap-states
+      {#'pathfinder.redis.storage/tracks-saver #'pathfinder.test-utils/atom-saver})
+     (mount/swap {#'pathfinder.redis.expired-listener/expired-listener nil})
+     mount/start)
     (f)
     (mount/stop)))
 
