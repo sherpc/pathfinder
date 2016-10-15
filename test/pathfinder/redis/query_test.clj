@@ -39,6 +39,13 @@
   [expected actual]
   (is (= expected actual)))
 
+(defn assert-search
+  [query expected]
+  (->>
+   query
+   (q/search rq/tracks-query-handler)
+   (is= expected)))
+
 (deftest search
   (let [x 1
         y 2
@@ -46,18 +53,19 @@
         f-id @(future (x-y-fn x y))
         s-id (x-y-fn x other-y)]
     (testing "when trace integer, should be able to search it"
-      (->>
-       (str "y:" y)
-       (q/search rq/tracks-query-handler)
-       (is= #{f-id}))
-      )
+      (assert-search (str "y:" y) #{f-id}))
     (testing "we should be able to search two tracks by same param"
-      (->>
-       (str "x:" 1)
-       (q/search rq/tracks-query-handler)
-       (is= #{f-id s-id})))
+      (assert-search (str "x:" x) #{f-id s-id}))
     (testing "we can use multiple params separated by space as AND meaning"
-      (->>
-       (format "x:%s y:%s" 1 2)
-       (q/search rq/tracks-query-handler)
-       (is= #{f-id})))))
+      (assert-search (format "x:%s y:%s" x y) #{f-id}))))
+
+(deftest index-expiration-test
+  (testing "after ttl index should be dropped"
+    (let [x 1
+          y 2
+          {:keys [id]} (p/trace-env-ttl "PT1S")]
+      (assert-search "x:1" #{id})
+      (assert-search "y:2" #{id})
+      (Thread/sleep (* 1000 2))
+      (assert-search "x:1" #{})
+      (assert-search "y:1" #{}))))

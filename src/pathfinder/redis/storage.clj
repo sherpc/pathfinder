@@ -1,11 +1,11 @@
 (ns pathfinder.redis.storage
   (:require [pathfinder.storage :refer [TracksSaver]]
             [pathfinder.redis.connection :refer [wcar*]]
+            [pathfinder.redis.expired-listener :refer [expired-listener]]
+            [pathfinder.redis.utils :as ru]
             [pathfinder.config :refer [config]]
             [taoensso.carmine :as car]
             [mount.core :refer [defstate]]))
-
-(def last-n "last-n")
 
 (defn ping
   []
@@ -14,26 +14,23 @@
    (car/set "navi" {:a 1})
    (car/get "navi")))
 
-(defn total-seconds
-  [ttl]
-  (->
-   ttl
-   java.time.Duration/parse
-   .getSeconds))
-
 (defn push-track
   [{:keys [path-id] :as track} ttl]
-  (wcar*
-   (car/lpush path-id track)
-   (car/expire path-id (total-seconds ttl))))
+  (let [ek (ru/->expire-key path-id)]
+    (wcar*
+     ;; track
+     (car/lpush path-id track)
+     ;; shadow key for expiration listener
+     (car/set ek nil)
+     (car/expire ek (ru/total-seconds ttl)))))
 
 (defn push-last-n
   [path-id size]
-  (let [last-buffer (into #{} (wcar* (car/lrange last-n 0 -1)))]
+  (let [last-buffer (into #{} (wcar* (car/lrange ru/last-n 0 -1)))]
     (when-not (last-buffer path-id)
       (wcar*
-       (car/lpush last-n path-id)
-       (car/ltrim last-n 0 (dec size))))))
+       (car/lpush ru/last-n path-id)
+       (car/ltrim ru/last-n 0 (dec size))))))
 
 (defn build-index
   [env]
