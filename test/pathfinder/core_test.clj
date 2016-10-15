@@ -11,7 +11,7 @@
   :each
   (fn [f]
     (mount/start-with-states
-     {#'pathfinder.storage/tracks-saver #'pathfinder.test-utils/atom-saver})
+     {#'pathfinder.redis.storage/tracks-saver #'pathfinder.test-utils/atom-saver})
     (f)
     (mount/stop)))
 
