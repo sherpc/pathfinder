@@ -1,8 +1,10 @@
 (ns pathfinder.test-utils
   (:require [clojure.test :as t]
             [mount.core :refer [defstate] :as mount]
+            [taoensso.carmine :as car]
             [pathfinder.storage :refer [TracksSaver]]
-            [pathfinder.query :refer [TracksQueryHandler]]))
+            [pathfinder.query :refer [TracksQueryHandler]]
+            [pathfinder.redis.connection :refer [wcar*]]))
 
 ;; TracksSaver
 
@@ -52,3 +54,18 @@
 
 (defstate dev-config
   :start (load-file "config/dev.clj"))
+
+;; Redis dev mount
+
+(defn with-mount-dev-config
+  [f]
+  (mount/start-with-states
+   {#'pathfinder.config/config #'pathfinder.test-utils/dev-config})
+  (f)
+  (mount/stop))
+
+(defn with-redis-flush
+  [f]
+  (wcar*
+   (car/flushall))
+  (f))

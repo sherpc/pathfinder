@@ -1,14 +1,8 @@
 (ns pathfinder.redis.storage
   (:require [pathfinder.storage :refer [TracksSaver]]
-            [pathfinder.config :refer [config]]
+            [pathfinder.redis.connection :refer [wcar*]]
             [taoensso.carmine :as car :refer (wcar)]
             [mount.core :refer [defstate]]))
-
-(declare tracks-saver)
-
-(defmacro wcar*
-  [& body]
-  `(car/wcar tracks-saver ~@body))
 
 (defn ping
   []
@@ -24,7 +18,7 @@
    java.time.Duration/parse
    .getSeconds))
 
-(defrecord RedisSaver [pool spec]
+(defrecord RedisSaver []
   TracksSaver
   (save! [_ {:keys [path-id] :as track} ttl]
     (wcar*
@@ -34,4 +28,4 @@
     (clojure.pprint/pprint track)))
 
 (defstate tracks-saver
-  :start (map->RedisSaver (:redis config)))
+  :start (->RedisSaver))
