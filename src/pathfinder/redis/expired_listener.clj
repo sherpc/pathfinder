@@ -31,6 +31,8 @@
     (car/psubscribe pattern)))
 
 (defstate expired-listener
-  :start (create-listener)
+  :start (do
+           (println "Startin expired-listener...")
+           (create-listener))
   :stop (when expired-listener
           (car/close-listener expired-listener)))
