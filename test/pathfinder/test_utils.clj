@@ -53,7 +53,7 @@
 ;; Config
 
 (defstate dev-config
-  :start (load-file "config/dev.clj"))
+  :start (load-file (format "config/%s.clj" (or (System/getenv "CONFIG") "dev"))))
 
 ;; Redis dev mount
 
