@@ -24,7 +24,7 @@
    java.time.Duration/parse
    .getSeconds))
 
-(defrecord RedisSaver [config]
+(defrecord RedisSaver [pool spec]
   TracksSaver
   (save! [_ {:keys [path-id] :as track} ttl]
     (wcar*
@@ -34,4 +34,4 @@
     (clojure.pprint/pprint track)))
 
 (defstate tracks-saver
-  :start (->RedisSaver (:redis config)))
+  :start (map->RedisSaver (:redis config)))
