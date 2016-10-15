@@ -32,16 +32,10 @@
        (car/lpush ru/last-n path-id)
        (car/ltrim ru/last-n 0 (dec size))))))
 
-(defn build-index
-  [env]
-  (->>
-   env
-   (mapv (fn [[k v]] (format "%s:%s" k v)))))
-
 (defn push-env-indexes
   [{:keys [env path-id]}]
   (wcar*
-   (mapv #(car/sadd % path-id) (build-index env))))
+   (mapv #(car/sadd % path-id) (ru/build-index env))))
 
 (defrecord RedisSaver [last-n-buffer-size]
   TracksSaver

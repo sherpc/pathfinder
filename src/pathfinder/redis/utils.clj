@@ -2,6 +2,18 @@
 
 (def last-n "last-n")
 
+(defn build-index
+  [env]
+  (->>
+   env
+   (mapv (fn [[k v]] (format "%s:%s" k v)))))
+
+(defn intersect
+  [sets]
+  (if (empty? sets)
+    #{}
+    (apply clojure.set/intersection sets)))
+
 (defn total-seconds
   [ttl]
   (->

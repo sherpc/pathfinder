@@ -7,12 +7,6 @@
             [mount.core :refer [defstate]]
             [clojure.tools.logging :as log]))
 
-(defn intersect
-  [& sets]
-  (if (empty? sets)
-    #{}
-    (apply clojure.set/intersection sets)))
-
 (defrecord RedisQueryHandler []
   TracksQueryHandler
   (search [_ query]
@@ -21,7 +15,7 @@
       (->>
        results
        (map #(into #{} %))
-       (apply intersect))))
+       ru/intersect)))
   (last-n [_ n]
     (log/debugf "last '%s' tracks" n)
     (wcar* (car/lrange ru/last-n 0 n)))

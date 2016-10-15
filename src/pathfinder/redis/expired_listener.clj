@@ -12,8 +12,14 @@
     (println (format "Removing key '%s'" path-id))
     (let [[tracks _] (wcar*
                       (car/lrange path-id 0 -1)
-                      (car/del path-id))]
-      (println (format "Found '%s' tracks to delete env index" (count tracks))))))
+                      (car/del path-id))
+          index (->>
+                 tracks
+                 (map :env)
+                 (map ru/build-index)
+                 (map #(into #{} %))
+                 ru/intersect)]
+      (wcar* (mapv #(car/srem % path-id) index)))))
 
 (def pattern "__key*__:expired")
 
