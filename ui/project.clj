@@ -19,11 +19,11 @@
   :profiles
   {:dev
    {:dependencies [[binaryage/devtools "0.8.2"]
-                   [figwheel-sidecar "0.5.7"]
+                   [figwheel-sidecar "0.5.8"]
                    [com.cemerick/piggieback "0.2.1"]]
 
-    :plugins      [[lein-figwheel "0.5.7"]
-                   [cider/cider-nrepl "0.13.0"]]
+    :plugins      [[lein-figwheel "0.5.8"]
+                   [cider/cider-nrepl "0.14.0-SNAPSHOT"]]
     }}
 
   :cljsbuild
