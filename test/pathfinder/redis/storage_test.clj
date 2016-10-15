@@ -5,7 +5,8 @@
             [pathfinder.test-utils :refer [dev-config] :as tu]
             [mount.core :as mount]
             [taoensso.carmine :as car]
-            [clojure.test :refer :all]))
+            [clojure.test :refer :all]
+            [pathfinder.test-fns :as tf]))
 
 (use-fixtures
   :each
@@ -36,7 +37,15 @@
       (let [z (+ x (:a y))
             {:keys [id]} (p/trace-env)
             stored (wcar* (car/lrange id 0 -1))]
+        (Thread/sleep 1000)
         (println "Stored data from" id)
         (is (= 2 (count stored)))))))
 
-
+(deftest last-n-buffer
+  (testing "when pushed more than last-n-buffer-size items, in buffer should remain only last last-n-buffer-size items"
+    (let [buffer-size (:last-n-buffer-size rs/tracks-saver)
+          n (+ buffer-size 10)]
+      (doseq [i (range n)]
+        (tf/test-fn i (inc i)))
+      (let [last-n (wcar* (car/lrange rs/last-n 0 -1))]
+        (is (= buffer-size (count last-n)))))))

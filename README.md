@@ -8,6 +8,7 @@ A Clojure library designed to track fns execution context and search through it.
  - Validate config on load, not on first usage
  - Add commit sha in trace
  - GitHub sources reading
+ - Postpone expiration of selected path
 
 ## Usage
 
