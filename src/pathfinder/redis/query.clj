@@ -2,14 +2,26 @@
   (:require [pathfinder.query :refer [TracksQueryHandler]]
             [pathfinder.redis.connection :refer [wcar*]]
             [pathfinder.redis.storage :as rs]
+            [clojure.string :as str]
             [taoensso.carmine :as car]
             [mount.core :refer [defstate]]
             [clojure.tools.logging :as log]))
 
+(defn intersect
+  [& sets]
+  (if (empty? sets)
+    #{}
+    (apply clojure.set/intersection sets)))
+
 (defrecord RedisQueryHandler []
   TracksQueryHandler
-  (search [_ params]
-    (log/debugf "searching tracks with '%s' params." params))
+  (search [_ query]
+    (let [params (str/split query #" ")
+          results (wcar* :as-pipeline (mapv car/smembers params))]
+      (->>
+       results
+       (map #(into #{} %))
+       (apply intersect))))
   (last-n [_ n]
     (log/debugf "last '%s' tracks" n)
     (wcar* (car/lrange rs/last-n 0 n)))
