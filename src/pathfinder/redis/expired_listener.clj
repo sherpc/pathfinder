@@ -25,14 +25,15 @@
 
 (defn create-listener
   []
+  ;; turn on keyspace notifications
+  (wcar* (car/config-set "notify-keyspace-events" "Ex"))
+  ;; start subscribers
   (car/with-new-pubsub-listener
     (:spec connection)
     {pattern notify-key-expired}
     (car/psubscribe pattern)))
 
 (defstate expired-listener
-  :start (do
-           (println "Startin expired-listener...")
-           (create-listener))
+  :start (create-listener)
   :stop (when expired-listener
           (car/close-listener expired-listener)))
