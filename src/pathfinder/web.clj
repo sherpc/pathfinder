@@ -7,8 +7,8 @@
             [ring.util.response :refer [response header]]
             [ring.middleware.json :as json-m]
             [ring.adapter.jetty :as j]
-
-            [pathfinder.query :refer [tracks-query-handler] :as q]))
+            [pathfinder.redis.query :refer [tracks-query-handler]]
+            [pathfinder.query :as q]))
 
 (defn last-n
   [n]

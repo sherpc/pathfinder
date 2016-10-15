@@ -5,11 +5,14 @@
             [pathfinder.test-fns :as tf]
             [pathfinder.core :as t]))
 
-(defn go-web-fake-data
+(defn go
   []
   (mount/stop)
-  (mount/start-with-states
-   {#'pathfinder.storage/tracks-saver #'pathfinder.test-utils/atom-saver
-    #'pathfinder.query/tracks-query-handler #'pathfinder.test-utils/atom-query-handler})
+  (->
+   (mount/swap-states
+    {#'pathfinder.redis.storage/tracks-saver #'pathfinder.test-utils/atom-saver
+     #'pathfinder.query/tracks-query-handler #'pathfinder.test-utils/atom-query-handler})
+   (mount/swap {#'pathfinder.redis.expired-listener/expired-listener nil})
+   mount/start)
   (tf/run-all))
 
