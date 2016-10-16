@@ -2,9 +2,11 @@ sudo: required
 services:
   - docker
 language: clojure
-lein: lein2
 jdk:
   - oraclejdk8
 install:
   - docker-compose up -d redis
   - docker ps
+branches:
+  only:
+    - master
