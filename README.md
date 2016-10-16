@@ -1,8 +1,9 @@
 # Pathfinder
 
-[ ![Codeship Status for sherpc/pathfinder](https://codeship.com/projects/8ff98e70-74e6-0134-b1f4-56e5180c42b3/status?branch=master)](https://codeship.com/projects/179280)
+[![Build Status](https://travis-ci.org/sherpc/pathfinder.svg?branch=master)](https://travis-ci.org/sherpc/pathfinder)
 
 A Clojure library designed to track fns execution context and search through it.
+
 
 ## TODO
 
