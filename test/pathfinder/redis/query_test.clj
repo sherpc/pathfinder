@@ -19,7 +19,7 @@
   (testing "with N paths should be N paths with last-n call"
     (tf/some-inner-fn 1 2 3)
     (tf/test-fn 5 6)
-    (let [result (q/last-n rq/tracks-query-handler 1000)]
+    (let [result (q/last-n rq/read-model 1000)]
       (is (= 2 (count result))))))
 
 (deftest last-n-buffer
@@ -28,8 +28,9 @@
           n (+ buffer-size 10)]
       (doseq [i (range n)]
         (tf/test-fn i (inc i)))
-      (let [last-n (q/last-n rq/tracks-query-handler 1000)]
-        (is (= buffer-size (count last-n)))))))
+      (let [last-n (q/last-n rq/read-model 1000)]
+        (is (= buffer-size (count last-n)))
+        (is (map? last-n))))))
 
 (defn x-y-fn
   [x y]
@@ -43,7 +44,7 @@
   [query expected]
   (->>
    query
-   (q/search rq/tracks-query-handler)
+   (q/search rq/read-model)
    (is= expected)))
 
 (deftest search

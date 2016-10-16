@@ -3,7 +3,7 @@
             [mount.core :refer [defstate] :as mount]
             [taoensso.carmine :as car]
             [pathfinder.storage :refer [TracksSaver]]
-            [pathfinder.query :refer [TracksQueryHandler]]
+            [pathfinder.query :refer [TracksReadModel]]
             [pathfinder.redis.connection :refer [wcar*]]))
 
 ;; TracksSaver
@@ -30,10 +30,10 @@
    distinct
    count))
 
-;; TracksQueryHandler
+;; TracksReadModel
 
 (defrecord AtomQueryHandler []
-  TracksQueryHandler
+  TracksReadModel
   (search [_ params]
     [])
   (last-n [_ n]

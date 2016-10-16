@@ -9,10 +9,10 @@ pom.xml.asc
 /.nrepl-port
 .hgignore
 .hg/
-
 /ui/*.log
 /ui/target
 /ui/*-init.clj
 /ui/resources/public/js/compiled
 /ui/out
+/ui/.nrepl-port
 /ui/.nrepl-port
